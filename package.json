@@ -1,0 +1,25 @@
+{
+  "name": "fastify-otel-bug-repro",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Local synthetic reproduction of duplicate Fastify OpenTelemetry exception events",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "repro": "node run.cjs",
+    "verify:single": "node run.cjs --expect-single",
+    "repro:jaeger": "node run.cjs --jaeger",
+    "jaeger:up": "docker compose up -d",
+    "jaeger:down": "docker compose down"
+  },
+  "dependencies": {
+    "@fastify/otel": "0.21.2",
+    "@opentelemetry/api": "1.9.1",
+    "@opentelemetry/exporter-trace-otlp-http": "0.222.0",
+    "@opentelemetry/resources": "2.11.0",
+    "@opentelemetry/sdk-trace-base": "2.11.0",
+    "@opentelemetry/sdk-trace-node": "2.11.0",
+    "fastify": "5.12.5"
+  }
+}
