@@ -89,16 +89,3 @@ In another terminal, run `npm run repro:jaeger`. Stop the binary with Ctrl+C. Do
 In the pinned upstream source, the [handler wrapper](https://github.com/fastify/otel/blob/a7894895684282b1c29f81fe795e03a524a72930/index.js#L697-L722) records the exception and propagates the error. The [internal onError hook](https://github.com/fastify/otel/blob/a7894895684282b1c29f81fe795e03a524a72930/index.js#L500-L515) records it again on the request span.
 
 The application has no manual `recordException()` call, custom error handler, additional instrumentation, or logger. Jaeger is optional and does not cause the duplication.
-
-## Privacy and local-only behavior
-
-- All application data is created synthetically; no production data or trace IDs are copied.
-- The error stack is explicitly synthetic (`/synthetic/repro.cjs`), not a real local filesystem path. Only stack equality is printed to the terminal.
-- The resource contains only `service.name=fastify-otel-bug-repro`. No host/process/resource detectors are used.
-- The only request is hard-coded and in-process. No user URLs, headers, payloads or incoming trace context are accepted.
-- `repro.cjs` ignores inherited `OTEL_*` and dependency-debug settings before loading dependencies.
-- `run.cjs` also removes `NODE_OPTIONS` and `NODE_PATH` before launching a fresh reproduction process. Already-preloaded code can run in npm/the launcher before this cleanup, so use a clean shell without preloads when capturing evidence; for example, `env -u NODE_OPTIONS -u NODE_PATH -u DEBUG -u NODE_DEBUG npm run repro`.
-- Jaeger export is explicitly directed to localhost. Jaeger's configured storage is in-memory, with no remote exporter and internal tracing/metrics disabled.
-- Installing packages or pulling the Jaeger image requires internet access once. Running the reproduction afterwards is local.
-
-Review any files or screenshots before posting them publicly. This repository contains no production evidence and does not automatically publish anything.
